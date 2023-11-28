@@ -27,7 +27,7 @@ if ($argc !== 3) {
     exit(1);
 }
 $dir = $argv[1];
-$isSimulation = $argv[2] === '1';
+$isSimulation = $argv[2] !== '1';
 $files = [];
 foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
     if (!$file->isFile()) {
