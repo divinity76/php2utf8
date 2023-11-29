@@ -48,8 +48,6 @@ echo "Found " . count($files) . " files to scan\n";
 $replacements = [];
 $encodingHandlers = array(
     'UTF-8' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $utf8BOM = "\xEF\xBB\xBF";
@@ -58,8 +56,9 @@ $encodingHandlers = array(
             $messageStrings[] = "Removed UTF-8 BOM";
             $ret = true;
         }
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-8(?:\"|\')\s*\)/im", $contents, $matches)) {
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-8(?:\"|\')\s*\)/im", '', $contents);
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-8(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $contents, $matches)) {
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='UTF-8')";
             $ret = true;
         }
@@ -69,8 +68,6 @@ $encodingHandlers = array(
         return $ret;
     },
     'UTF16LE' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $utf16LEBOM = "\xFF\xFE";
@@ -81,8 +78,9 @@ $encodingHandlers = array(
             $ret = true;
         }
         $asUTF8 = $ret ? $contents : (string)@mb_convert_encoding($contents, 'UTF-8', 'UTF-16LE');
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16LE(?:\"|\')\s*\)/im", $asUTF8, $matches)) {
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16LE(?:\"|\')\s*\)/im", '', $contents);
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16LE(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $asUTF8, $matches)) {
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='UTF-16LE')";
             $ret = true;
         }
@@ -92,8 +90,6 @@ $encodingHandlers = array(
         return $ret;
     },
     'UTF16BE' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $utf16BEBOM = "\xFE\xFF";
@@ -104,8 +100,9 @@ $encodingHandlers = array(
             $ret = true;
         }
         $asUTF8 = $ret ? $contents : (string)@mb_convert_encoding($contents, 'UTF-8', 'UTF-16BE');
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16BE(?:\"|\')\s*\)/im", $asUTF8, $matches)) {
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16BE(?:\"|\')\s*\)/im", '', $contents);
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-16BE(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $asUTF8, $matches)) {
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='UTF-16BE')";
             $ret = true;
         }
@@ -115,8 +112,6 @@ $encodingHandlers = array(
         return $ret;
     },
     'UTF32LE' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $utf32LEBOM = "\xFF\xFE\x00\x00";
@@ -127,8 +122,9 @@ $encodingHandlers = array(
             $ret = true;
         }
         $asUTF8 = $ret ? $contents : (string)@mb_convert_encoding($contents, 'UTF-8', 'UTF-32LE');
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32LE(?:\"|\')\s*\)/im", $asUTF8, $matches)) {
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32LE(?:\"|\')\s*\)/im", '', $contents);
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32LE(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $asUTF8, $matches)) {
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='UTF-32LE')";
             $ret = true;
         }
@@ -138,8 +134,6 @@ $encodingHandlers = array(
         return $ret;
     },
     'UTF32BE' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $utf32BEBOM = "\x00\x00\xFE\xFF";
@@ -150,8 +144,9 @@ $encodingHandlers = array(
             $ret = true;
         }
         $asUTF8 = $ret ? $contents : (string)@mb_convert_encoding($contents, 'UTF-8', 'UTF-32BE');
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32BE(?:\"|\')\s*\)/im", $asUTF8, $matches)) {
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32BE(?:\"|\')\s*\)/im", '', $contents);
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')UTF-32BE(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $asUTF8, $matches)) {
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='UTF-32BE')";
             $ret = true;
         }
@@ -161,14 +156,13 @@ $encodingHandlers = array(
         return $ret;
     },
     'ISO-8859-1' => function (string $input, string &$output = null, array &$messageStrings = null): bool {
-        $messageStrings = array();
-        $output = "";
         $ret = false;
         $contents = $input;
         $asUTF8 = $contents;
-        if (preg_match("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')ISO-8859-1(?:\"|\')\s*\)/im", $asUTF8, $matches)) {
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')ISO-8859-1(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $asUTF8, $matches)) {
             $contents = mb_convert_encoding($contents, 'UTF-8', 'ISO-8859-1');
-            $contents = preg_replace("/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')ISO-8859-1(?:\"|\')\s*\)/im", '', $contents);
+            $contents = preg_replace($rex, '', $contents);
             $messageStrings[] = "Removed declare(encoding='ISO-8859-1') and converted ISO-8859-1 to UTF-8";
             $ret = true;
         }
@@ -176,6 +170,23 @@ $encodingHandlers = array(
             $output = $contents;
         }
         return $ret;
+    },
+    'Shift_JIS' => function(string $input, string &$output = null, array &$messageStrings = null): bool {
+        if(mb_check_encoding($input, 'UTF-8')){
+            return false;
+        }
+        if(!mb_check_encoding($input, 'Shift_JIS')){
+            return false;
+        }
+        // probably Shift_JIS (not ascii/utf8 compatible, and shift_jis compatible...)
+        $output = mb_convert_encoding($input, 'UTF-8', 'Shift_JIS');
+        $messageStrings[] = "Converted Shift_JIS to UTF-8";
+        $rex = "/^\s*declare\s*\(\s*encoding\s*\=\s*(?:\"|\')Shift_JIS(?:\"|\')\s*\)/im";
+        if (preg_match($rex, $output, $matches)) {
+            $output = preg_replace($rex, '', $output);
+            $messageStrings[] = "Removed declare(encoding='Shift_JIS')";
+        }
+        return true;
     },
 );
 foreach ($files as $fileno => $file) {
